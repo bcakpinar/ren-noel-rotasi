@@ -1,0 +1,703 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f1f1b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Ren Noel">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230f1f1b'/%3E%3Cpath d='M16 5 L8 18 h5 L7 26 h18 l-6-8 h5Z' fill='%236cc6a1'/%3E%3Ccircle cx='16' cy='6' r='2.5' fill='%23f2c45a'/%3E%3C/svg%3E">
+<style>
+:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;font:14px system-ui,sans-serif}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<title>Ren Üçgeni Noel Rotası</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: koyu çam-gecesi hero + rota haritası, ardından yapışkan gün sekmeleri; her gün = şehir illüstrasyonlu bant + istasyon panosu tarzı saat sütunlu kartlar */
+:root{
+  --bg:#f5f3ee; --surface:#ffffff; --surface-2:#efebe3; --ink:#1b2622; --muted:#5a6762; --line:#e0dacf;
+  --pine:#1e5b47; --wine:#a3263a; --gold:#b97c12; --gold-soft:#f6e7c8;
+  --kid-bg:#e4f1ea; --kid-ink:#174a39; --food-bg:#fbe9e3; --food-ink:#7c1f2e; --tr-bg:#eef0f5; --tr-ink:#2c3a55;
+  --night:#0f1f1b; --night-2:#173029; --night-fg:#f3eee2; --night-muted:#b5c4bd; --board:#121a18; --board-fg:#f2c45a; --board-dim:#8f9a95;
+  --display:"Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+  --body:"Figtree", "Segoe UI", system-ui, sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  --r:14px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0c1513; --surface:#14211d; --surface-2:#1a2a25; --ink:#ece7dc; --muted:#a2b2ab; --line:#26372f;
+  --pine:#6cc6a1; --wine:#f08797; --gold:#e9b44c; --gold-soft:#3a2f18;
+  --kid-bg:#173328; --kid-ink:#b7ecd3; --food-bg:#3a1d22; --food-ink:#ffc9d1; --tr-bg:#1c2536; --tr-ink:#c6d3f0;
+  --night:#08110f; --night-2:#112520; --board:#0a0f0e; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0c1513; --surface:#14211d; --surface-2:#1a2a25; --ink:#ece7dc; --muted:#a2b2ab; --line:#26372f;
+  --pine:#6cc6a1; --wine:#f08797; --gold:#e9b44c; --gold-soft:#3a2f18;
+  --kid-bg:#173328; --kid-ink:#b7ecd3; --food-bg:#3a1d22; --food-ink:#ffc9d1; --tr-bg:#1c2536; --tr-ink:#c6d3f0;
+  --night:#08110f; --night-2:#112520; --board:#0a0f0e; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3,h4{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.1}
+p{margin:0}
+a{color:var(--pine)}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-radius:6px}
+
+/* HERO */
+.hero{position:relative;background:radial-gradient(120% 90% at 80% 0%,var(--night-2),var(--night) 70%);color:var(--night-fg);overflow:hidden}
+.hero canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.hero .wrap{position:relative;padding-block:56px 40px;display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--board-fg)}
+.hero h1{font-size:clamp(40px,6.4vw,76px);font-weight:800;letter-spacing:-.02em;margin-top:14px}
+.hero h1 em{font-style:normal;color:var(--board-fg)}
+.hero .lede{margin-top:18px;max-width:52ch;color:var(--night-muted);font-size:17px}
+.facts{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.fact{border:1px solid #ffffff24;border-radius:999px;padding:7px 14px;font-size:14px;background:#ffffff0d}
+.fact b{font-family:var(--mono);color:var(--board-fg);font-weight:700;margin-right:6px}
+.map-card{background:#ffffff0a;border:1px solid #ffffff1f;border-radius:20px;padding:14px}
+.map-card svg{display:block;width:100%;height:auto}
+.map-legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--night-muted);padding:6px 6px 2px}
+.map-legend i{display:inline-block;width:18px;height:3px;border-radius:2px;vertical-align:middle;margin-right:6px}
+
+/* CITIES */
+.cities{padding-block:44px 8px}
+.sec-head{display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+.sec-head h2{font-size:clamp(26px,3.4vw,36px);font-weight:700}
+.sec-head p{color:var(--muted);max-width:56ch}
+.city-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.city{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column}
+.city .art{aspect-ratio:320/150;max-width:100%;background:var(--night)}
+.city .art svg{display:block;width:100%;height:100%}
+.city .txt{padding:16px 18px 18px;display:grid;gap:8px}
+.city h3{font-size:22px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.city h3 small{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;color:var(--muted);font-weight:500;text-transform:uppercase}
+.city p{color:var(--muted);font-size:15px}
+.city .kv{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.kv span{font-family:var(--mono);font-size:12px;background:var(--surface-2);border-radius:6px;padding:3px 8px}
+
+/* TABS */
+.tabbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);margin-top:36px}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-block:12px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:600 14.5px var(--body);border-radius:999px;padding:9px 16px;cursor:pointer;display:flex;gap:8px;align-items:center;transition:background .2s,color .2s,border-color .2s}
+.tab small{font-weight:500;color:var(--muted);font-size:12.5px}
+.tab:hover{border-color:var(--pine)}
+.tab[aria-selected="true"]{background:var(--pine);border-color:var(--pine);color:var(--bg)}
+.tab[aria-selected="true"] small{color:var(--bg);opacity:.85}
+
+/* DAYS */
+.days{padding-block:28px 20px;display:grid;gap:48px}
+.day-head{display:grid;grid-template-columns:260px 1fr;gap:22px;align-items:stretch;background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.day-head .art{background:var(--night);min-height:140px}
+.day-head .art svg{width:100%;height:100%;display:block}
+.day-head .info{padding:20px 22px 20px 0;display:grid;gap:10px;align-content:center;min-width:0}
+.day-no{font-family:var(--mono);font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--wine);font-weight:700}
+.day-head h3{font-size:clamp(24px,3vw,32px);font-weight:700}
+.day-head p{color:var(--muted)}
+.progress{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted)}
+.bar{flex:0 1 220px;height:6px;background:var(--surface-2);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--pine);width:0;transition:width .3s}
+
+.timeline{display:grid;gap:14px;margin-top:18px}
+.stop{display:grid;grid-template-columns:112px 1fr;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;transition:opacity .25s}
+.stop.is-done{opacity:.62}
+.board{background:var(--board);color:var(--board-fg);font-family:var(--mono);padding:16px 12px;display:flex;flex-direction:column;gap:2px;align-items:flex-start}
+.board .t{font-size:19px;font-weight:700;letter-spacing:.02em;font-variant-numeric:tabular-nums}
+.board .t2{font-size:13px;color:var(--board-dim);font-variant-numeric:tabular-nums}
+.board .dur{margin-top:auto;padding-top:12px;font-size:11.5px;color:var(--board-dim);letter-spacing:.04em}
+.board .dur b{display:block;color:var(--night-fg);font-size:13px}
+.sbody{padding:16px 18px 16px;display:grid;gap:10px;min-width:0}
+.stop h4{font-size:20px;font-weight:700}
+.place{font-size:13.5px;color:var(--muted);font-weight:600}
+.desc{font-size:15.5px;max-width:72ch}
+.transport{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:var(--tr-bg);color:var(--tr-ink);border-radius:10px;padding:9px 12px;font-size:14px}
+.mode{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700}
+.line{font-family:var(--mono);font-weight:700;font-size:12.5px;min-width:26px;text-align:center;padding:2px 7px;border-radius:6px;color:#fff;background:var(--tr-c,#3a4a6b)}
+.line.tram{--tr-c:#1f7a4d}.line.bus{--tr-c:#2f5d9e}.line.train{--tr-c:#9b2335}.line.walk{--tr-c:#5d6660}.line.boat{--tr-c:#1e6f86}
+.badges{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.badge{border-radius:10px;padding:10px 12px;font-size:14.5px;min-width:0}
+.badge b{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px}
+.badge.kid{background:var(--kid-bg);color:var(--kid-ink)}
+.badge.food{background:var(--food-bg);color:var(--food-ink)}
+.badges.one{grid-template-columns:1fr}
+.foot-row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.done{display:inline-flex;gap:8px;align-items:center;font-size:13.5px;color:var(--muted);cursor:pointer;user-select:none}
+.done input{width:18px;height:18px;accent-color:var(--pine);margin:0}
+.note{font-size:12.5px;color:var(--muted);font-style:italic}
+
+/* TIPS */
+.tips{padding-block:40px 30px;border-top:1px solid var(--line);margin-top:20px}
+.tip-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.tip{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px 20px;display:grid;gap:10px;align-content:start;min-width:0}
+.tip.feature{grid-column:1/-1;background:var(--gold-soft);border-color:transparent}
+.tip h3{font-size:19px;display:flex;gap:10px;align-items:center}
+.tip h3 svg{flex:0 0 auto}
+.tip ul{margin:0;padding-left:18px;display:grid;gap:6px;font-size:15px}
+.tip li::marker{color:var(--wine)}
+.gate{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px}
+.gate div{border-radius:10px;padding:12px;font-size:14px}
+.gate .ok{background:var(--kid-bg);color:var(--kid-ink)}
+.gate .no{background:var(--food-bg);color:var(--food-ink)}
+.gate b{display:block;font-family:var(--mono);font-size:12px;letter-spacing:.06em;margin-bottom:2px}
+.links{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:14px;margin-top:6px}
+footer{padding-block:26px 40px;color:var(--muted);font-size:13.5px}
+
+@media (max-width:900px){
+  .hero .wrap{grid-template-columns:1fr;gap:28px}
+  .city-grid{grid-template-columns:1fr 1fr}
+  .city-grid .city:last-child{grid-column:1/-1}
+}
+@media (max-width:640px){
+  .hero .wrap{padding-block:40px 28px}
+  .city-grid{grid-template-columns:1fr}
+  .city-grid .city:last-child{grid-column:auto}
+  .day-head{grid-template-columns:1fr}
+  .day-head .info{padding:0 18px 18px}
+  .day-head .art{aspect-ratio:320/130;min-height:0}
+  .stop{grid-template-columns:1fr}
+  .board{flex-direction:row;align-items:baseline;gap:10px;padding:10px 16px}
+  .board .dur{margin:0 0 0 auto;padding:0}
+  .board .dur b{display:inline;margin-left:4px}
+  .badges,.tip-grid,.gate{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <canvas id="snow" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <div>
+      <div class="eyebrow">Kasım sonu · Advent pazarları dönemi</div>
+      <h1>Basel’den Alsas’a<br><em>Noel ışıkları</em> rotası</h1>
+      <p class="lede">İki yetişkin ve bir çocuk için, Perşembe öğleden sonra başlayıp Pazar öğleden sonra biten sakin tempolu bir plan. Üs Basel; Colmar ve Strazburg trenle günübirlik.</p>
+      <div class="facts">
+        <span class="fact"><b>3</b>gece</span>
+        <span class="fact"><b>4</b>gün</span>
+        <span class="fact"><b>3</b>şehir</span>
+        <span class="fact"><b>2</b>ülke · CHF + EUR</span>
+        <span class="fact"><b>~16:45</b>hava kararıyor</span>
+      </div>
+    </div>
+    <div class="map-card">
+      <svg id="map" viewBox="0 0 400 470" role="img" aria-label="Basel, Colmar ve Strazburg arasındaki tren rotası haritası">
+        <defs>
+          <pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="#0f1f1b"/><line x1="0" y1="0" x2="0" y2="6" stroke="#ffffff14" stroke-width="2"/></pattern>
+        </defs>
+        <rect width="400" height="470" rx="12" fill="#11231e"/>
+        <!-- Switzerland -->
+        <path d="M0 425 L150 418 L205 432 L250 418 L400 412 L400 470 L0 470 Z" fill="url(#hatch)"/>
+        <!-- mountain hints -->
+        <g fill="none" stroke="#ffffff1c" stroke-width="1.4">
+          <path d="M40 120 l14 -16 l12 12 l10 -10 l16 18"/><path d="M60 210 l14 -16 l12 12 l10 -10 l16 18"/><path d="M48 300 l14 -16 l12 12 l10 -10 l16 18"/>
+          <path d="M318 170 l12 -14 l10 10 l12 -12 l14 16"/><path d="M330 260 l12 -14 l10 10 l12 -12 l14 16"/><path d="M312 350 l12 -14 l10 10 l12 -12 l14 16"/>
+        </g>
+        <text x="52" y="150" fill="#ffffff55" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="2">VOSGES</text>
+        <text x="300" y="300" fill="#ffffff55" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="2">KARAORMAN</text>
+        <text x="28" y="40" fill="#ffffff80" font-family="Bricolage Grotesque, sans-serif" font-size="15" font-weight="700" letter-spacing="3">FRANSA</text>
+        <text x="300" y="40" fill="#ffffff80" font-family="Bricolage Grotesque, sans-serif" font-size="15" font-weight="700" letter-spacing="3">ALMANYA</text>
+        <text x="24" y="455" fill="#ffffff80" font-family="Bricolage Grotesque, sans-serif" font-size="15" font-weight="700" letter-spacing="3">İSVİÇRE</text>
+        <!-- Rhine -->
+        <path d="M400 428 C320 424 262 428 236 414 C214 398 206 352 210 300 C214 240 222 190 248 140 C266 104 280 70 292 0" fill="none" stroke="#3f8fb0" stroke-width="7" stroke-linecap="round" opacity=".55"/>
+        <text x="222" y="235" fill="#7fc0da" font-family="JetBrains Mono, monospace" font-size="10" transform="rotate(-80 222 235)" letter-spacing="3">REN</text>
+        <!-- rail line -->
+        <path id="rail" d="M226 410 L150 352 L152 300 L156 245 L178 186 L266 82" fill="none" stroke="#ffffff40" stroke-width="2" stroke-dasharray="2 5"/>
+        <!-- day routes -->
+        <path class="route r1" data-day="1" d="M198 396 Q214 400 226 410" fill="none" stroke="#f2c45a" stroke-width="4" stroke-linecap="round"/>
+        <path class="route r2" data-day="2" d="M226 410 C190 395 150 370 150 340 C150 300 152 270 156 245" fill="none" stroke="#e86b7d" stroke-width="4" stroke-linecap="round"/>
+        <path class="route r3" data-day="3" d="M226 410 C246 340 250 250 244 200 C240 150 252 110 266 82" fill="none" stroke="#6cc6a1" stroke-width="4" stroke-linecap="round" stroke-dasharray="9 7"/>
+        <!-- triangle hint -->
+        <path d="M156 245 L266 82" fill="none" stroke="#ffffff22" stroke-width="1.5" stroke-dasharray="4 6"/>
+        <!-- labels on routes -->
+        <g font-family="JetBrains Mono, monospace" font-size="11" font-weight="700">
+          <rect x="88" y="378" width="86" height="22" rx="11" fill="#e86b7d"/><text x="131" y="393" text-anchor="middle" fill="#1a0d10">Cuma · 45 dk</text>
+          <rect x="258" y="232" width="118" height="22" rx="11" fill="#6cc6a1"/><text x="317" y="247" text-anchor="middle" fill="#0c1d16">Cmt · 1 sa 15 dk</text>
+        </g>
+        <!-- Mulhouse / Freiburg minor -->
+        <g font-family="Figtree, sans-serif" font-size="11" fill="#ffffff80">
+          <circle cx="150" cy="352" r="3" fill="#ffffff80"/><text x="140" y="356" text-anchor="end">Mulhouse</text>
+          <circle cx="178" cy="186" r="3" fill="#ffffff80"/><text x="168" y="190" text-anchor="end">Sélestat</text>
+          <circle cx="292" cy="270" r="3" fill="#ffffff60"/><text x="300" y="274">Freiburg</text>
+        </g>
+        <!-- airport -->
+        <g>
+          <circle cx="196" cy="394" r="6" fill="#11231e" stroke="#f2c45a" stroke-width="2"/>
+          <path d="M193 394 h6 M196 391 v6" stroke="#f2c45a" stroke-width="1.6"/>
+          <text x="188" y="378" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="10" fill="#f2c45a">EuroAirport (BSL)</text>
+        </g>
+        <!-- cities -->
+        <g class="city-dot" data-day="1 4">
+          <circle cx="226" cy="410" r="11" fill="#f2c45a"/><circle cx="226" cy="410" r="4.5" fill="#11231e"/>
+          <text x="244" y="406" font-family="Bricolage Grotesque, sans-serif" font-size="19" font-weight="800" fill="#ffffff">Basel</text>
+          <text x="244" y="421" font-family="JetBrains Mono, monospace" font-size="10" fill="#f2c45a">ÜS · 3 GECE</text>
+        </g>
+        <g class="city-dot" data-day="2">
+          <circle cx="156" cy="245" r="9" fill="#e86b7d"/><circle cx="156" cy="245" r="3.5" fill="#11231e"/>
+          <text x="140" y="242" text-anchor="end" font-family="Bricolage Grotesque, sans-serif" font-size="18" font-weight="800" fill="#ffffff">Colmar</text>
+          <text x="140" y="256" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="10" fill="#e86b7d">CUMA</text>
+        </g>
+        <g class="city-dot" data-day="3">
+          <circle cx="266" cy="82" r="9" fill="#6cc6a1"/><circle cx="266" cy="82" r="3.5" fill="#11231e"/>
+          <text x="250" y="72" text-anchor="end" font-family="Bricolage Grotesque, sans-serif" font-size="18" font-weight="800" fill="#ffffff">Strazburg</text>
+          <text x="250" y="86" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="10" fill="#6cc6a1">CUMARTESİ</text>
+        </g>
+        <!-- compass -->
+        <g transform="translate(360 80)" font-family="JetBrains Mono, monospace" font-size="10" fill="#ffffff80">
+          <path d="M0 -14 L5 4 L0 0 L-5 4 Z" fill="#ffffff80"/><text x="0" y="16" text-anchor="middle">K</text>
+        </g>
+      </svg>
+      <div class="map-legend">
+        <span><i style="background:#f2c45a"></i>Varış/dönüş</span>
+        <span><i style="background:#e86b7d"></i>Colmar (TER)</span>
+        <span><i style="background:#6cc6a1"></i>Strazburg (TER)</span>
+        <span>Sekme değiştikçe o günün rotası parlar</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="cities wrap" aria-labelledby="cities-h">
+  <div class="sec-head">
+    <h2 id="cities-h">Üç şehir, üç ayrı Noel</h2>
+    <p>Basel zanaatkâr ve sakin, Colmar masal kitabı gibi, Strazburg ise büyük ve görkemli. Sırası da bu yüzden böyle: tempo her gün biraz artıyor, son gün yine sakinleşiyor.</p>
+  </div>
+  <div class="city-grid" id="cityGrid"></div>
+</section>
+
+<nav class="tabbar" aria-label="Gün seçimi">
+  <div class="wrap">
+    <div class="tabs" role="tablist" id="tabs"></div>
+  </div>
+</nav>
+
+<main class="days wrap" id="days"></main>
+
+<section class="tips wrap" aria-labelledby="tips-h">
+  <div class="sec-head">
+    <h2 id="tips-h">Aile İçin Hayat Kurtaran İpuçları</h2>
+    <p>Yola çıkmadan önce bir kez okuyun; özellikle havalimanı kapısı ve Fransız peronları ilk kez gelenlerin en çok takıldığı iki nokta.</p>
+  </div>
+  <div class="tip-grid">
+    <article class="tip feature">
+      <h3><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><rect x="2" y="6" width="22" height="14" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><rect x="5" y="10" width="7" height="2.5" rx="1" fill="currentColor"/><rect x="5" y="14" width="11" height="2" rx="1" fill="currentColor"/></svg>BaselCard: otelde kalana ücretsiz</h3>
+      <ul>
+        <li>Basel’de bir otelde (veya kayıtlı bir konaklamada) kalan herkese check-in’de <b>BaselCard</b> verilir; konaklama boyunca geçerlidir. Resepsiyonda isteyin, bazı oteller e-posta ile dijital gönderir.</li>
+        <li>Kart, Basel bölgesindeki tramvay ve otobüslerde <b>ücretsiz toplu taşıma</b> sağlar; havalimanına giden <b>50 numaralı otobüs</b> da buna dahildir. Pazar günkü dönüş bileti cebinizde demektir.</li>
+        <li>Pek çok müzede, Zoo Basel’de ve şehir turlarında <b>indirim</b> (çoğunlukla %50) sunar. Spielzeug Welten Museum’a girerken gösterin.</li>
+        <li>Varış günü kart henüz elinizde olmayabilir: havalimanından şehre ilk yolculuğun biletini ayrıca alın. Bazı oteller rezervasyon onayıyla bu transferi de ücretsiz sayar; otelinize önceden sorun.</li>
+      </ul>
+    </article>
+
+    <article class="tip">
+      <h3><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><path d="M3 13h14M12 7l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><rect x="19" y="4" width="4" height="18" rx="1.5" fill="currentColor"/></svg>EuroAirport: doğru kapı</h3>
+      <p>Havalimanı Fransa topraklarında ama iki çıkışı var. Bagajı aldıktan sonra seçeceğiniz kapı, hangi ülkeye çıktığınızı belirler.</p>
+      <div class="gate">
+        <div class="ok"><b>SORTIE SUISSE · AUSGANG SCHWEIZ</b>İsviçre sektörü. Basel otobüsü 50, İsviçre taksileri, CHF fiyatlar. Sizin kapınız bu.</div>
+        <div class="no"><b>SORTIE FRANCE</b>Fransa sektörü. Mulhouse/Saint-Louis otobüsleri. Geri dönmek zahmetli, yanlışlıkla çıkmayın.</div>
+      </div>
+      <ul>
+        <li>Dönüşte otobüs 50 sizi doğrudan İsviçre sektörüne bırakır; check-in oradan.</li>
+        <li>Taksi gerekirse İsviçre tarafından şehre yaklaşık 20 dakika sürer; fiyatı binmeden sorun.</li>
+      </ul>
+    </article>
+
+    <article class="tip">
+      <h3><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><rect x="5" y="3" width="16" height="16" rx="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M5 12h16" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="15.5" r="1.4" fill="currentColor"/><circle cx="17" cy="15.5" r="1.4" fill="currentColor"/><path d="M8 19l-3 4M18 19l3 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>SBB’den SNCF’ye geçiş</h3>
+      <ul>
+        <li>Fransa trenleri Basel SBB garının batı ucundaki <b>Fransız bölümünden, 30–35 numaralı peronlardan</b> kalkar. Tabelada “France / Frankreich” yazar. Ana holden yürüyerek 5 dakika.</li>
+        <li>Bu koridorda zaman zaman pasaport/kimlik kontrolü yapılır: <b>10–15 dakika erken</b> orada olun, pasaportları hep yanınızda taşıyın.</li>
+        <li>Biletler: SNCF Connect veya TER Grand Est (Fluo) uygulaması, SBB Mobile ya da Fransız bölümündeki otomatlar. Fransız TER biletleri trene binmeden geçerli olmalı; uygulamada aldıysanız QR kod yeterli.</li>
+        <li>Cumartesi için TER Grand Est’in hafta sonu/grup tarifelerine bakın (ör. Alsa+ 24h Groupe); Basel çıkışlı geçerliliğini satın almadan kontrol edin. Fransa’da 4 yaş altı ücretsiz, 4–11 yaş indirimlidir.</li>
+        <li>Pazar sezonunda Strazburg trenleri dolu olur; ayakta kalmamak için ilk vagonlara yürüyün.</li>
+      </ul>
+    </article>
+
+    <article class="tip">
+      <h3><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><circle cx="10" cy="13" r="7" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17" cy="13" r="7" fill="none" stroke="currentColor" stroke-width="2"/></svg>Döviz ve kart</h3>
+      <ul>
+        <li>Basel’de <b>CHF</b>, Colmar ve Strazburg’da <b>EUR</b>. Temassız kart her yerde yaygın.</li>
+        <li>Kartla öderken POS “TRY’de öde” diye sorarsa her zaman <b>yerel para birimini</b> seçin; dönüştürme kuru kötüdür.</li>
+        <li>Basel’de bazı yerler Euro kabul eder ama para üstünü CHF ve düşük kurla verir. Euro’yu Fransa’ya saklayın.</li>
+        <li>Cepte küçük nakit: yaklaşık 40 CHF + 50 €. Fähri, bazı pazar tezgâhları ve tuvaletler için işe yarar.</li>
+      </ul>
+    </article>
+
+    <article class="tip">
+      <h3><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><path d="M6 8h12v9a5 5 0 0 1-5 5h-2a5 5 0 0 1-5-5z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M18 10h2a3 3 0 0 1 0 6h-2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 3v3M14 3v3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Pazar kupası depozitosu</h3>
+      <ul>
+        <li>Glühwein, vin chaud ve sıcak elma suyu her şehre özel desenli kupada verilir; fiyata birkaç frank/euro <b>depozito</b> eklenir.</li>
+        <li>Kupayı tezgâha iade edip depozitoyu geri alın ya da hatıra olarak saklayın. Her şehirden birer kupa, çocuk için güzel bir koleksiyon olur.</li>
+        <li>Çocuklar için alkolsüz seçenek: <b>Kinderpunsch</b> (Basel), <b>jus de pomme chaud</b> veya <b>chocolat chaud</b> (Fransa).</li>
+      </ul>
+    </article>
+
+    <article class="tip">
+      <h3><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><circle cx="13" cy="7" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M6 23v-4a7 7 0 0 1 14 0v4" fill="none" stroke="currentColor" stroke-width="2"/></svg>Kalabalıkta çocuk güvenliği</h3>
+      <ul>
+        <li>Her sabah çocuğun o günkü kıyafetiyle bir fotoğrafını çekin.</li>
+        <li>Cebine telefon numaranızın yazılı olduğu bir kart koyun; renkli bir bere kalabalıkta bulmayı kolaylaştırır.</li>
+        <li>Her şehirde bir buluşma noktası belirleyin: Basel’de Münster önündeki ağaç, Colmar’da Koïfhus, Strazburg’da Place Kléber’deki dev çam.</li>
+        <li>Strazburg’da cumartesi öğleden sonrası çok kalabalıktır; bebek arabası yerine sırt taşıyıcısı daha rahat.</li>
+      </ul>
+    </article>
+
+    <article class="tip">
+      <h3><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><path d="M13 2v22M3.5 7.5l19 11M22.5 7.5l-19 11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Hava, kıyafet, mola</h3>
+      <ul>
+        <li>Kasım sonunda Ren vadisi genelde 0–7 °C, nemli ve rüzgârlı. Kat kat giyinin; su geçirmez ayakkabı şart.</li>
+        <li>Colmar ve Strazburg’un eski şehirleri arnavut kaldırımı: hafif, katlanır bir puset veya taşıyıcı.</li>
+        <li>Her 90 dakikada bir sıcak mola planlayın: müze, kafe ya da tren. Planda bu molalar zaten var.</li>
+        <li>Pazar tuvaletleri genelde ücretlidir; müze ve kafe molalarını tuvalet molası olarak da kullanın.</li>
+      </ul>
+    </article>
+
+    <article class="tip">
+      <h3><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><rect x="4" y="4" width="18" height="18" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4 10h18M9 2v4M17 2v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Pazar günü ve belgeler</h3>
+      <ul>
+        <li>İsviçre’de Pazar günü mağazalar kapalıdır; Basel SBB garındaki marketler açıktır. Noel pazarı Pazar günü de açık.</li>
+        <li>Schengen vizesi İsviçre ve Fransa’yı birlikte kapsar. Günübirlik gezilerde de üç pasaportu yanınıza alın.</li>
+        <li>İsviçre AB üyesi değil: hattınızın roaming paketinin İsviçre’yi ayrıca kapsadığını kontrol edin.</li>
+      </ul>
+    </article>
+  </div>
+  <div class="links">
+    <a href="https://www.sbb.ch" target="_blank" rel="noopener">SBB tarifeleri</a>
+    <a href="https://www.sncf-connect.com" target="_blank" rel="noopener">SNCF Connect</a>
+    <a href="https://www.euroairport.com" target="_blank" rel="noopener">EuroAirport</a>
+    <a href="https://www.basel.com" target="_blank" rel="noopener">Basel Tourismus</a>
+    <a href="https://noel.strasbourg.eu" target="_blank" rel="noopener">Strazburg Noel pazarı</a>
+  </div>
+</section>
+
+<footer class="wrap">
+  Saatler örnek bir akıştır. Tren saatlerini yolculuktan bir gün önce SBB veya SNCF Connect’te, müze ve tekne saatlerini resmî sitelerinden kontrol edin; kış döneminde değişebilirler. “Gezdik” işaretleri yalnızca bu tarayıcıda saklanır.
+</footer>
+
+<script>
+(function(){
+/* ---------- City illustrations (night panels, deliberate single look) ---------- */
+function sky(id, c1, c2){
+  return '<defs><linearGradient id="'+id+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+c1+'"/><stop offset="1" stop-color="'+c2+'"/></linearGradient></defs><rect width="320" height="150" fill="url(#'+id+')"/>';
+}
+function stars(seed){
+  var s='', x=seed;
+  for(var i=0;i<18;i++){ x=(x*9301+49297)%233280; var px=(x/233280)*320; x=(x*9301+49297)%233280; var py=(x/233280)*60; s+='<circle cx="'+px.toFixed(1)+'" cy="'+py.toFixed(1)+'" r="'+(i%3?0.8:1.3)+'" fill="#fff" opacity=".7"/>'; }
+  return s;
+}
+function bulbs(y, x1, x2, sag){
+  var s='<path d="M'+x1+' '+y+' Q'+((x1+x2)/2)+' '+(y+sag)+' '+x2+' '+y+'" fill="none" stroke="#ffffff40" stroke-width=".8"/>';
+  for(var i=1;i<10;i++){ var t=i/10, px=x1+(x2-x1)*t, py=y+2*sag*t*(1-t); s+='<circle cx="'+px.toFixed(1)+'" cy="'+py.toFixed(1)+'" r="1.8" fill="'+(i%2?'#f2c45a':'#ff8a6b')+'"/>'; }
+  return s;
+}
+var ART = {
+  basel: function(k){ return '<svg viewBox="0 0 320 150" preserveAspectRatio="xMidYMid slice" aria-hidden="true">'+sky('bs'+k,'#0e2430','#22404a')+stars(7)+
+    '<path d="M0 104 Q60 92 120 100 T320 96 V150 H0Z" fill="#183038"/>'+
+    /* Münster: red sandstone, two towers */
+    '<g><rect x="110" y="66" width="100" height="44" fill="#a54a34"/><path d="M110 66 L160 40 L210 66Z" fill="#7d3a2c"/>'+
+    '<path d="M110 66 L160 40 L210 66" fill="none" stroke="#e3b24a" stroke-width="1" stroke-dasharray="3 3" opacity=".7"/>'+
+    '<rect x="112" y="34" width="22" height="76" fill="#b4573e"/><path d="M112 34 L123 6 L134 34Z" fill="#8e4331"/>'+
+    '<rect x="186" y="38" width="22" height="72" fill="#b4573e"/><path d="M186 38 L197 12 L208 38Z" fill="#8e4331"/>'+
+    '<circle cx="160" cy="80" r="8" fill="#f2c45a" opacity=".9"/><rect x="118" y="50" width="10" height="14" rx="5" fill="#f2c45a" opacity=".8"/><rect x="192" y="52" width="10" height="14" rx="5" fill="#f2c45a" opacity=".8"/>'+
+    '<rect x="148" y="94" width="24" height="16" rx="10" fill="#3a1a14"/></g>'+
+    /* houses left */
+    '<rect x="30" y="84" width="26" height="26" fill="#d8c7a0"/><path d="M28 84 L43 70 L58 84Z" fill="#5a3a2a"/><rect x="38" y="92" width="8" height="8" fill="#f2c45a"/>'+
+    '<rect x="62" y="80" width="30" height="30" fill="#7fa38f"/><path d="M60 80 L77 66 L94 80Z" fill="#3f2c24"/><rect x="70" y="88" width="7" height="8" fill="#f2c45a"/><rect x="80" y="88" width="7" height="8" fill="#f2c45a"/>'+
+    /* Rhine */
+    '<rect x="0" y="110" width="320" height="40" fill="#123a48"/>'+
+    '<g stroke="#f2c45a" stroke-width="1.4" opacity=".55"><path d="M120 120h14M150 126h20M190 119h12M128 134h18"/></g>'+
+    /* Fähri with cable */
+    '<path d="M228 96 L310 96" stroke="#d7e3e6" stroke-width=".8"/><path d="M262 96 L268 120" stroke="#d7e3e6" stroke-width=".8"/>'+
+    '<path d="M250 124 h34 l-6 7 h-22z" fill="#c9a874"/><rect x="258" y="117" width="16" height="7" fill="#6b4c2e"/>'+
+    bulbs(60,0,100,14)+'</svg>'; },
+  colmar: function(k){
+    var cols=['#e9b949','#d9727a','#6fa3c6','#86b38a','#e58f5a'];
+    var s='<svg viewBox="0 0 320 150" preserveAspectRatio="xMidYMid slice" aria-hidden="true">'+sky('cs'+k,'#1b1830','#3a2c45')+stars(13);
+    for(var i=0;i<5;i++){
+      var x=20+i*58, w=52, h=58+(i%2?10:0), y=108-h;
+      s+='<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" fill="'+cols[i]+'"/>';
+      s+='<path d="M'+(x-3)+' '+y+' L'+(x+w/2)+' '+(y-26)+' L'+(x+w+3)+' '+y+'Z" fill="#5b2f2a"/>';
+      s+='<g stroke="#4a2a1e" stroke-width="2.2" opacity=".85"><path d="M'+x+' '+(y+20)+'h'+w+'M'+x+' '+(y+40)+'h'+w+'M'+(x+w/2)+' '+y+'v'+h+'M'+x+' '+y+'l'+(w/2)+' 20M'+(x+w)+' '+y+'l-'+(w/2)+' 20"/></g>';
+      s+='<rect x="'+(x+8)+'" y="'+(y+25)+'" width="9" height="10" fill="#ffe28a"/><rect x="'+(x+w-17)+'" y="'+(y+25)+'" width="9" height="10" fill="#ffe28a"/>';
+    }
+    s+='<rect x="0" y="108" width="320" height="42" fill="#1f3550"/>';
+    for(var j=0;j<5;j++){ s+='<rect x="'+(24+j*58)+'" y="112" width="44" height="3" fill="'+cols[j]+'" opacity=".45"/><rect x="'+(30+j*58)+'" y="119" width="32" height="2" fill="'+cols[j]+'" opacity=".3"/>'; }
+    s+='<path d="M120 132 q30 8 60 0 l-6 6 h-48z" fill="#3a2a1c"/><circle cx="150" cy="128" r="3" fill="#f2c45a"/>';
+    s+=bulbs(34,0,320,18)+'</svg>'; return s; },
+  strasbourg: function(k){ return '<svg viewBox="0 0 320 150" preserveAspectRatio="xMidYMid slice" aria-hidden="true">'+sky('ss'+k,'#101c2c','#243650')+stars(21)+
+    '<path d="M0 112 Q80 104 160 110 T320 106 V150 H0Z" fill="#1d2b3d"/>'+
+    /* cathedral pink sandstone, single north spire */
+    '<g><rect x="80" y="56" width="96" height="62" fill="#b5776a"/><rect x="80" y="30" width="30" height="88" fill="#c08273"/>'+
+    '<path d="M82 30 L95 -4 L108 30Z" fill="#9b6255"/><path d="M95 -4 v-8" stroke="#c08273" stroke-width="2"/>'+
+    '<rect x="146" y="40" width="30" height="16" fill="#c08273"/>'+
+    '<circle cx="128" cy="76" r="13" fill="#2c1b2e" stroke="#f2c45a" stroke-width="1.5"/><circle cx="128" cy="76" r="5" fill="#f2c45a" opacity=".8"/>'+
+    '<g stroke="#8d5a4f" stroke-width="1.2"><path d="M88 44v66M98 44v66M156 60v50M166 60v50"/></g>'+
+    '<path d="M118 118 v-14 a10 10 0 0 1 20 0 v14z" fill="#2c1b2e"/></g>'+
+    /* half-timber */
+    '<rect x="186" y="80" width="30" height="38" fill="#ead9b8"/><path d="M184 80 L201 62 L218 80Z" fill="#5b2f2a"/><g stroke="#5b3a2a" stroke-width="2"><path d="M186 94h30M201 80v38"/></g>'+
+    /* big tree */
+    '<g><path d="M268 22 L238 64 h12 L228 92 h14 L220 120 h96 L298 92 h14 L290 64 h12Z" transform="translate(-4 0)" fill="#1e6b4a"/>'+
+    '<rect x="260" y="118" width="8" height="10" fill="#5a3a24"/>'+
+    '<path d="M264 10 l3 7 7 .5 -5.5 4.5 2 7 -6.5-4 -6.5 4 2-7 -5.5-4.5 7-.5z" fill="#f2c45a"/>'+
+    '<g fill="#f2c45a"><circle cx="258" cy="56" r="2.5"/><circle cx="276" cy="70" r="2.5"/><circle cx="248" cy="84" r="2.5"/><circle cx="286" cy="96" r="2.5"/><circle cx="262" cy="104" r="2.5"/></g>'+
+    '<g fill="#ff6b6b"><circle cx="268" cy="44" r="2.2"/><circle cx="252" cy="72" r="2.2"/><circle cx="278" cy="84" r="2.2"/><circle cx="240" cy="108" r="2.2"/><circle cx="296" cy="110" r="2.2"/></g></g>'+
+    '<rect x="0" y="128" width="320" height="22" fill="#e9eef3" opacity=".9"/></svg>'; }
+};
+
+/* ---------- Cities ---------- */
+var CITIES = [
+  {k:'basel', name:'Basel', sub:'İsviçre · Üs', text:'Ren’in iki yakasına kurulu, kırmızı kumtaşı katedralli sakin bir şehir. Barfüsserplatz ve Münsterplatz pazarları İsviçre’nin en güzel Noel pazarları arasında sayılır.', kv:['CHF','Tram 8 · 11 · 2','Fähri']},
+  {k:'colmar', name:'Colmar', sub:'Fransa · Cuma', text:'Renkli yarım ahşap evler, kanallar ve tamamen çocuklara ayrılmış bir Noel pazarı. Küçük olduğu için baştan sona yürünebilir.', kv:['EUR','TER ~45 dk','Petite Venise']},
+  {k:'strasbourg', name:'Strazburg', sub:'Fransa · Cumartesi', text:'Kendine “Noel’in başkenti” der: 1570’ten beri kurulan Christkindelsmärik, Place Kléber’deki dev çam ve 12:30’da çalışan astronomik saat.', kv:['EUR','TER ~1 sa 15 dk','Tram A · D']}
+];
+document.getElementById('cityGrid').innerHTML = CITIES.map(function(c){
+  return '<article class="city"><div class="art">'+ART[c.k]('c')+'</div><div class="txt"><h3>'+c.name+' <small>'+c.sub+'</small></h3><p>'+c.text+'</p><div class="kv">'+c.kv.map(function(x){return '<span>'+x+'</span>';}).join('')+'</div></div></article>';
+}).join('');
+
+/* ---------- Itinerary ---------- */
+var DAYS = [
+ {n:1, wd:'Perşembe', art:'basel', title:'Varış ve Basel’in ilk ışıkları',
+  sum:'Kısa bir gün: havalimanından şehre, kısa bir dinlenme, hava kararırken iki pazar ve sıcak bir İsviçre akşam yemeği. Toplam yürüyüş yaklaşık 2 km.',
+  stops:[
+   {t1:'14:00',t2:'14:45',dur:'45 dk',title:'EuroAirport’tan Basel’e',place:'EuroAirport Basel-Mulhouse-Freiburg → Basel SBB',
+    desc:'Bagajı aldıktan sonra “Sortie Suisse / Ausgang Schweiz” tabelasını izleyin. İsviçre sektöründen çıkınca otobüs durağı hemen karşınızda. Bilet otomatı CHF ve kart kabul eder.',
+    tr:[{m:'Otobüs',c:'bus',l:['50']}],trt:'Basel SBB yönü · yaklaşık 20 dk · sık sefer',
+    kid:'6 yaş altı çocuklar İsviçre toplu taşımasında ücretsizdir. Valizleri arka kapıdaki geniş alana koyun, çocuk cam kenarından Ren’i ilk gören olsun.',
+    food:'Havalimanında sadece küçük bir atıştırmalık; asıl ziyafet akşam pazarda.'},
+   {t1:'15:00',t2:'16:15',dur:'1 sa 15 dk',title:'Otel, BaselCard ve kısa mola',place:'Otel · Basel SBB veya Altstadt çevresi',
+    desc:'Check-in sırasında BaselCard’ı isteyin; Pazar dahil tüm tramvay ve otobüsleri ücretsiz yapar. Sonraki üç gün çok yürüyeceğiniz için bu mola plana bilerek konuldu.',
+    tr:[{m:'Tram',c:'tram',l:['8','11']}],trt:'Basel SBB → Barfüsserplatz yönü · 5–7 dk (otelinize göre değişir)',
+    kid:'30–40 dakikalık bir uyku veya sessiz oyun, akşam pazarında mızmızlanmayı önlemenin en garantili yolu.'},
+   {t1:'16:30',t2:'17:30',dur:'1 sa',title:'Barfüsserplatz Noel Pazarı',place:'Barfüsserplatz · Altstadt',
+    desc:'Basel’in büyük Noel pazarının hareketli kanadı. Hava 16:45 civarı kararırken ahşap kulübelerin ışıkları yanar; el yapımı süsler, mumlar, oyuncaklar.',
+    tr:[{m:'Tram',c:'tram',l:['3','6','8','11','14','16']}],trt:'“Barfüsserplatz” durağı, pazarın tam önü',
+    kid:'Meydanın köşesindeki Spielzeug Welten Museum’da (Steinenvorstadt 1) dev bir oyuncak ayı koleksiyonu ve minyatür dükkânlar var. Akşam saatlerini kontrol edin; hava çok soğuksa ısınmak için ideal.',
+    food:'Raclette ekmeği, Bratwurst, Magenbrot (baharatlı şekerli kurabiye) ve çocuğa sıcak Kinderpunsch.'},
+   {t1:'17:30',t2:'18:30',dur:'1 sa',title:'Münsterplatz Noel Pazarı',place:'Münsterplatz · katedral önü',
+    desc:'Barfüsserplatz’tan Münsterberg yokuşuyla 5–7 dakika. Katedralin önündeki ışıklı ağaç ve daha sakin, zanaatkâr ağırlıklı tezgâhlar. Fotoğraf için günün en güzel saati.',
+    tr:[{m:'Yürüyüş',c:'walk',l:['6 dk']}],trt:'Münsterberg yokuşu, hafif tırmanış',
+    kid:'Yolunuzu Spalenberg’e uzatırsanız Johann Wanner Noel dükkânının vitrinleri bir masal sahnesi gibidir. Buluşma noktası olarak katedral önündeki ağacı gösterin.',
+    food:'Basler Läckerli (ballı-bademli Basel kurabiyesi), sıcak kestane, büyükler için Glühwein.'},
+   {t1:'18:45',t2:'20:00',dur:'1 sa 15 dk',title:'Akşam yemeği: İsviçre klasikleri',place:'Barfüsserplatz / Gerbergasse çevresi',
+    desc:'Peynir fondüsü veya raclette paylaşın, yanına rösti. Barfüsserplatz’taki Zum Braunen Mutz gibi geleneksel birahaneler aile dostudur. Noel döneminde rezervasyon yapın.',
+    tr:[{m:'Tram',c:'tram',l:['8','11']}],trt:'Otele dönüş · 5–10 dk',
+    kid:'Älplermagronen (makarna, patates, peynir, yanında elma kompostosu) İsviçre’nin çocuk favorisidir. Fondüde ekmeğini düşüren şarkı söyler oyunu herkesi güldürür.',
+    food:'Fondü, raclette, rösti, Älplermagronen. Tatlıya Basler Läckerli.'}
+  ]},
+ {n:2, wd:'Cuma', art:'colmar', title:'Colmar: masal kitabı günü',
+  sum:'Kalabalık başlamadan önce sabah trenle gidin. Hafta içi olduğu için Colmar’ı en sakin gününde göreceksiniz. Toplam yürüyüş yaklaşık 4 km, molalar sık.',
+  stops:[
+   {t1:'08:45',t2:'10:00',dur:'45–50 dk tren',title:'Basel SBB → Colmar',place:'Basel SBB, Fransız bölümü · peron 30–35',
+    desc:'TER Grand Est treni Basel–Mulhouse–Colmar–Strazburg hattında yaklaşık saatte bir kalkar. Biletleri önceden SNCF Connect veya SBB Mobile’dan alın, perona 10–15 dakika erken gidin.',
+    tr:[{m:'Tren',c:'train',l:['TER']}],trt:'Basel SBB → Mulhouse → Colmar · yaklaşık 45–50 dk',
+    kid:'“Tabelalar Almanca’dan Fransızca’ya ne zaman dönecek?” oyunu: Saint-Louis’i ilk fark eden kazanır.',
+    food:'Garın fırınından Gipfeli (İsviçre kruvasanı) ile trende kahvaltı.'},
+   {t1:'10:15',t2:'11:15',dur:'1 sa',title:'Maison Pfister ve Koïfhus',place:'Rue des Marchands · Place de l’Ancienne Douane',
+    desc:'1537 yapımı Maison Pfister’in boyalı cephesi ve ahşap köşe balkonu Colmar’ın simgesidir. Birkaç adım ötedeki Koïfhus (Eski Gümrük binası) Noel döneminde el işi ustalarına ev sahipliği yapar.',
+    tr:[{m:'Yürüyüş',c:'walk',l:['15–20 dk']}],trt:'Gardan Champ de Mars parkı üzerinden eski şehre',
+    kid:'New York’taki Özgürlük Heykeli’nin heykeltıraşı Bartholdi Colmarlı. Doğduğu ev Rue des Marchands’ta. Şehrin kuzey girişinde heykelin küçük bir kopyası da var.',
+    food:'Pain d’épices (Alsas zencefilli keki) ve bredele, yani küçük Noel kurabiyeleri.'},
+   {t1:'11:15',t2:'12:15',dur:'1 sa',title:'La Petite Venise ve Çocuk Noel Pazarı',place:'Place des Six-Montagnes-Noires',
+    desc:'Colmar’ın kanal mahallesi. Buradaki pazar tamamen çocuklara ayrılmıştır: oyuncaklar, el yapımı süsler ve Noel Baba’ya mektup kutusu. Rue de Turenne köprüsü en güzel fotoğraf noktası.',
+    tr:[{m:'Yürüyüş',c:'walk',l:['5 dk']}],trt:'Koïfhus’tan Quai de la Poissonnerie boyunca',
+    kid:'Noel Baba mektubunu evde önceden yazıp getirin. Père Noël kutusuna atmak günün en sevilen anı olabilir.',
+    food:'Chocolat chaud veya jus de pomme chaud (tarçınlı sıcak elma suyu).'},
+   {t1:'12:15',t2:'13:30',dur:'1 sa 15 dk',title:'Tarte flambée öğle yemeği',place:'Petite Venise / Krutenau winstub’ları',
+    desc:'Flammekueche, yani tarte flambée: incecik hamur, krema, soğan, lardon, odun fırınında. Paylaşımlık servis edilir. Kalabalık başlamadan, 12:15 civarı oturun.',
+    trt:'',
+    kid:'Çocuğa “gratinée” (peynirli) veya sade krema-peynir versiyonunu isteyin. Yanında Spätzle, yani Alsas usulü küçük hamur parçacıkları.',
+    food:'Tarte flambée, Spätzle, tatlıya kugelhopf veya tarte aux pommes.'},
+   {t1:'13:45',t2:'14:15',dur:'25 dk',title:'Petite Venise kanal turu',place:'Pont Saint-Pierre iskelesi (Sweet Narcisse kayıkları)',
+    desc:'Lauch kanalında yassı kayıklarla sakin bir tur. Noel pazarı döneminde çalışır; kötü havada iptal olabilir, sıra varsa 15–20 dakika bekleme payı bırakın.',
+    tr:[{m:'Kayık',c:'boat',l:['~25 dk']}],trt:'Petite Venise’in güney ucu',
+    kid:'Alçak köprülerin altından geçerken kayıkçı herkese eğilmesini söyler, çocuklar buna bayılır. Eldiven ve bere unutulmasın, su üstü serindir.'},
+   {t1:'14:30',t2:'15:45',dur:'1 sa 15 dk',title:'Oyuncak Müzesi (Musée du Jouet)',place:'40 rue Vauban',
+    desc:'Oyuncak trenler, bebekler, eski oyun konsolları. Soğukta ısınmak için tam zamanında bir mola. Bu saatte büyükler sırayla yakındaki Unterlinden Müzesi’ne de göz atabilir.',
+    tr:[{m:'Yürüyüş',c:'walk',l:['12 dk']}],trt:'Petite Venise’ten kuzeye, eski şehrin içinden',
+    kid:'Büyük maket tren düzenini görmeden çıkmayın. Müze dükkânında küçük bir hatıra seçme hakkı iyi bir ödül olur.'},
+   {t1:'16:00',t2:'17:30',dur:'1 sa 30 dk',title:'Pazarlar ve ışıklandırma',place:'Place des Dominicains · Place Jeanne d’Arc · Place de l’Ancienne Douane',
+    desc:'Hava karardığında Colmar’ın cepheleri tek tek ışıklandırılır. Dominiken kilisesi önündeki pazar ve Koïfhus çevresi akşam en büyülü halindedir.',
+    tr:[{m:'Yürüyüş',c:'walk',l:['10 dk']}],trt:'Pazarlar birbirine 3–5 dk mesafede',
+    kid:'Işıkları sayma oyunu: en çok ışıklandırılmış evi kim bulacak? Meydanlarda atlıkarınca varsa son tur onun.',
+    food:'Büyüklere Alsas’a özgü vin chaud blanc (beyaz sıcak şarap), herkese bretzel ve sıcak kestane.'},
+   {t1:'17:45',t2:'18:45',dur:'45–50 dk tren',title:'Colmar → Basel dönüşü',place:'Gare de Colmar',
+    desc:'Gara yürüyüş 15–20 dakika ya da kısa bir taksi. Dönüşte trenler hafta içi akşamları yoğun olabilir; bir önceki veya sonraki seferi yedek olarak not edin.',
+    tr:[{m:'Tren',c:'train',l:['TER']}],trt:'Colmar → Mulhouse → Basel SBB',
+    kid:'Trende hafif bir akşam yemeği: bretzel, meyve, su. Otele varınca doğrudan uyku.',
+    food:'Gardaki fırından bretzel veya sandviç; trende piknik.'}
+  ]},
+ {n:3, wd:'Cumartesi', art:'strasbourg', title:'Strazburg: Noel’in başkenti',
+  sum:'Planın en yoğun günü. Erken trenle gidin, öğle saatini astronomik saate göre ayarlayın, ışıklandırmayı görüp akşam dönün. Toplam yürüyüş yaklaşık 5 km.',
+  stops:[
+   {t1:'08:30',t2:'09:50',dur:'1 sa 15 dk tren',title:'Basel SBB → Strazburg',place:'Basel SBB, Fransız bölümü · peron 30–35',
+    desc:'Doğrudan TER trenleri yaklaşık 1 saat 15 dk – 1 saat 30 dk sürer. Cumartesi trenleri kalabalıktır; erken saat hem yer bulmayı hem pazarları sakin görmeyi sağlar.',
+    tr:[{m:'Tren',c:'train',l:['TER']}],trt:'Basel SBB → Mulhouse → Colmar → Strazburg',
+    kid:'Dün gördüğünüz Colmar’ı trenden tanımaya çalışın. Uzun yolculuk için bir boyama defteri veya sesli kitap.',
+    food:'Trende kahvaltı: kruvasan, yoğurt, meyve.'},
+   {t1:'10:00',t2:'10:20',dur:'20 dk',title:'Gardan Grande Île’e',place:'Gare Centrale → Homme de Fer',
+    desc:'Noel pazarı döneminde Grande Île’e giden köprülerde güvenlik ve çanta kontrolü yapılır. Büyük sırt çantası yerine küçük çanta taşıyın.',
+    tr:[{m:'Tram',c:'tram',l:['A','D']}],trt:'Gare Centrale (yer altı) → Homme de Fer · 2 durak · ya da 15 dk yürüyüş',
+    kid:'Bileti tramvaydaki makineye çocuk kendisi okutsun, küçük ama önemli bir görev.'},
+   {t1:'10:20',t2:'11:20',dur:'1 sa',title:'Place Kléber ve Christkindelsmärik',place:'Place Kléber · Place Broglie',
+    desc:'Place Kléber’deki dev Noel çamı (genelde 30 metreyi aşar) şehrin sembolüdür. Hemen yanındaki Place Broglie’de 1570’ten beri kurulan Christkindelsmärik var, Fransa’nın en eski Noel pazarı.',
+    tr:[{m:'Yürüyüş',c:'walk',l:['3 dk']}],trt:'Homme de Fer → Place Kléber',
+    kid:'Bu ağacı günün buluşma noktası yapın. Alt dallardaki süsleri sayma yarışı da 5 dakikalık güzel bir oyun.',
+    food:'Bredele çeşitleri, pain d’épices, çocuğa chocolat chaud.'},
+   {t1:'11:30',t2:'12:45',dur:'1 sa 15 dk',title:'Notre-Dame Katedrali ve 12:30 Astronomik Saat',place:'Place de la Cathédrale',
+    desc:'Astronomik saatin 12:30 gösterisi için bilet sabah, katedralin güney kapısındaki gişeden satılır ve kontenjan sınırlıdır. 11:30’da kuyrukta olun. Gösteriden önce kısa bir tanıtım filmi oynatılır.',
+    tr:[{m:'Yürüyüş',c:'walk',l:['8 dk']}],trt:'Rue du Dôme ya da Rue Mercière üzerinden',
+    kid:'Gösteride havariler İsa’nın önünden geçer ve tepedeki horoz kanat çırparak öter. Çocuğa önceden söyleyin, o anı kaçırmasın. Enerjiniz varsa 332 basamakla platforma çıkılabilir.'},
+   {t1:'12:45',t2:'14:00',dur:'1 sa 15 dk',title:'Alsas öğle yemeği',place:'Katedral çevresi winstub’lar · Place du Marché-Gayot',
+    desc:'Winstub, Alsas’ın geleneksel ahşap panelli restoranıdır. Cumartesi öğlesi için mutlaka rezervasyon yapın; yoksa katedralin arkasındaki küçük meydanlara bakın.',
+    trt:'',
+    kid:'Knepfle veya Spätzle (tereyağlı hamur parçacıkları) ya da schnitzel çocuklar için güvenli seçimler. Masaya boya kalemi götürün.',
+    food:'Choucroute garnie, baeckeoffe (fırında et ve patates), tarte flambée.'},
+   {t1:'14:15',t2:'15:45',dur:'1 sa 30 dk',title:'Petite-France ve Barrage Vauban',place:'Petite-France · Ponts Couverts',
+    desc:'Eski tabakçı mahallesinin yarım ahşap evleri, kanal kenarı yürüyüşü ve dört ortaçağ kulesi. Barrage Vauban’ın üst terası ücretsizdir ve tüm şehre bakar. Batorama tekne turu yaklaşık 70 dakikadır; küçük çocukla isteğe bağlı.',
+    tr:[{m:'Yürüyüş',c:'walk',l:['15 dk']}],trt:'Katedralden Rue des Dentelles üzerinden',
+    kid:'Pont du Faisan döner bir köprü: tekne geçerken yana döner. Şanslıysanız görürsünüz. Barrage Vauban terasından kulelerin sayısını saydırın.',
+    food:'Rue des Dentelles’teki Mireille Oster dükkânında onlarca çeşit pain d’épices, tatmalık parçalar.'},
+   {t1:'16:00',t2:'17:45',dur:'1 sa 45 dk',title:'Işıklandırmalar ve son pazar turu',place:'Rue Mercière · Rue des Orfèvres · Place Gutenberg',
+    desc:'Hava 16:45 civarı kararır. Rue des Orfèvres’in süslü cepheleri ve Rue Mercière’den aydınlatılmış katedral cephesi günün kapanış manzarası. Place Gutenberg’deki pazar daha küçük ve sakindir.',
+    tr:[{m:'Yürüyüş',c:'walk',l:['20 dk']}],trt:'Petite-France’tan Grand Rue boyunca',
+    kid:'Bu saatte kalabalık en yoğun haline gelir: çocuğun elini bırakmayın ya da taşıyıcıya alın. Hatıra kupasını bu turda alın.',
+    food:'Marrons chauds (sıcak kestane), bretzel, büyüklere vin chaud, çocuğa jus de pomme chaud à la cannelle.'},
+   {t1:'18:15',t2:'19:45',dur:'1 sa 15 dk tren',title:'Strazburg → Basel dönüşü',place:'Gare Centrale',
+    desc:'Homme de Fer’den A veya D tramvayı ile gara dönün. Cumartesi akşam trenleri dolu olabilir; perona 15 dakika erken çıkın, sonraki seferi yedek not edin.',
+    tr:[{m:'Tram',c:'tram',l:['A','D']},{m:'Tren',c:'train',l:['TER']}],trt:'Homme de Fer → Gare Centrale → Basel SBB',
+    kid:'Trende günün “en iyi üç anı” oyunu; uykudan önce güzel bir kapanış.',
+    food:'Bretzel, sandviç ve meyveyle trende hafif akşam yemeği.'}
+  ]},
+ {n:4, wd:'Pazar', art:'basel', title:'Basel’e veda: Ren, katedral ve çeşmeler',
+  sum:'Valizler otelde, eller boş. Sakin bir sabah, ipe bağlı feribotla Ren’i geçiş, Tinguely Çeşmesi ve öğleden sonra havalimanı. Akış 17:00 civarı bir uçuşa göre hazırlandı.',
+  stops:[
+   {t1:'09:00',t2:'09:45',dur:'45 dk',title:'Kahvaltı ve check-out',place:'Otel',
+    desc:'Odayı boşaltın, valizleri resepsiyonda emanete bırakın. BaselCard dönüş günü de geçerli; kartı cebinizde tutun.',
+    trt:'',
+    kid:'Bugün çocuğa “rehber” görevi verin: haritadan Fähri’yi o bulsun.',
+    food:'Zopf: İsviçre’nin Pazar sabahlarına özgü örgülü tereyağlı ekmeği, reçel ve tereyağıyla.'},
+   {t1:'10:00',t2:'10:45',dur:'45 dk',title:'Marktplatz, Rathaus ve Mittlere Brücke',place:'Marktplatz · Schifflände',
+    desc:'16. yüzyıldan kalma kırmızı Rathaus’un (belediye binası) boyalı avlusu ücretsiz gezilebilir. Mittlere Brücke, Basel’in en eski köprüsünün yerinde durur ve Ren manzarası buradan güzeldir.',
+    tr:[{m:'Tram',c:'tram',l:['8','11']}],trt:'“Marktplatz” durağı',
+    kid:'Schifflände’de bir cephede Lällekeenig var: Kleinbasel’e doğru dil çıkaran bir kral başı. Dilini oynatırken yakalamaya çalışın.',
+    food:'Bir kafede sıcak çikolata.'},
+   {t1:'10:45',t2:'11:45',dur:'1 sa',title:'Pfalz terası ve Basel Münster',place:'Münsterplatz · Pfalz',
+    desc:'Katedralin arkasındaki Pfalz terası Ren’e, Kleinbasel’e ve uzakta Karaorman’a bakar. Pazar sabahı ayin olduğu için katedral içi ziyaretçilere genelde ayinden sonra açılır; saatleri kontrol edin. Romanesk Galluspforte kapısını kaçırmayın.',
+    tr:[{m:'Yürüyüş',c:'walk',l:['8 dk']}],trt:'Rheinsprung / Augustinergasse yokuşu',
+    kid:'Cephede atının üstünde ejderhayla savaşan Aziz Georg heykelini bulma oyunu. Ejderhayı ilk gören kazanır.',
+    food:'Münsterplatz pazarı Pazar da açık: sıcak kestane ve son bir Läckerli paketi.'},
+   {t1:'11:45',t2:'12:15',dur:'30 dk',title:'Ren feribotu: Münsterfähri “Leu”',place:'Pfalz’ın altındaki iskele',
+    desc:'Motoru olmayan, nehrin üstüne gerilmiş bir tele bağlı ve yalnızca akıntıyla karşıya geçen geleneksel feribot. Kış saatleri kısıtlıdır ve ücret küçük, nakit hazır bulundurun. Karşıda Oberer Rheinweg boyunca yürüyün, Mittlere Brücke’den geri dönün.',
+    tr:[{m:'Fähri',c:'boat',l:['~5 dk']}],trt:'Grossbasel ↔ Kleinbasel; dönüş Mittlere Brücke üzerinden yürüyerek',
+    kid:'Motor olmadan nasıl gittiğini kayıkçıya sordurun. Teknenin dümeni çevirip akıntıyı kullanması çocuğa küçük bir fizik dersi.'},
+   {t1:'12:20',t2:'12:50',dur:'30 dk',title:'Tinguely Çeşmesi',place:'Theaterplatz · Kunsthalle yanı',
+    desc:'Jean Tinguely’nin on hareketli metal heykelinden oluşan çeşme. Soğuk günlerde buz sarkıtlarıyla kaplanır ve kışın belki de en güzel haline bürünür.',
+    tr:[{m:'Tram',c:'tram',l:['8','11']}],trt:'“Barfüsserplatz” veya “Theater” · ya da Mittlere Brücke’den 15 dk yürüyüş',
+    kid:'Her makineye bir isim koyun: hangisi tükürüyor, hangisi el sallıyor, hangisi hortum gibi dönüyor?'},
+   {t1:'12:50',t2:'13:50',dur:'1 sa',title:'Veda öğle yemeği',place:'Steinenvorstadt / Barfüsserplatz çevresi',
+    desc:'Pazar günü mağazalar kapalı ama restoran ve kafeler açık. Son İsviçre yemeği için hafif bir şey seçin; havalimanına gitmeden önce sakin bir sofra.',
+    trt:'',
+    kid:'Kalan bozuk CHF’leri çocuk saysın ve havalimanında çikolataya harcasın.',
+    food:'Bratwurst ve soğan sosu, rösti, ya da çorba. Tatlıya Basler Läckerli.'},
+   {t1:'14:00',t2:'14:45',dur:'45 dk',title:'Otelden havalimanına',place:'Otel → Basel SBB → EuroAirport (İsviçre sektörü)',
+    desc:'Valizleri alın, Basel SBB’den otobüs 50 ile havalimanına gidin. Otobüs sizi İsviçre sektörüne bırakır. Uçuşunuzdan en az 2 saat önce terminalde olun.',
+    tr:[{m:'Tram',c:'tram',l:['8','11']},{m:'Otobüs',c:'bus',l:['50']}],trt:'Basel SBB → EuroAirport · yaklaşık 20 dk · BaselCard geçerli',
+    kid:'Pasaport kontrolünden sonra camdan uçakları izlemek, son bir saati kolay geçirtir.',
+    food:'Havalimanında son İsviçre çikolatası.'}
+  ]}
+];
+
+var STORE='ren-trip-done-v1', done={};
+try{ done=JSON.parse(localStorage.getItem(STORE)||'{}')||{}; }catch(e){ done={}; }
+function save(){ try{ localStorage.setItem(STORE, JSON.stringify(done)); }catch(e){} }
+
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+
+function stopHTML(d,s,i){
+  var id='d'+d.n+'s'+i;
+  var tr='';
+  if(s.tr){ tr='<div class="transport">'+s.tr.map(function(t){ return '<span class="mode">'+t.m+'</span>'+t.l.map(function(l){return '<span class="line '+t.c+'">'+esc(l)+'</span>';}).join(''); }).join('<span aria-hidden="true">→</span>')+(s.trt?'<span>'+esc(s.trt)+'</span>':'')+'</div>'; }
+  var b=[];
+  if(s.kid) b.push('<div class="badge kid"><b>Çocuk İçin İpucu</b>'+esc(s.kid)+'</div>');
+  if(s.food) b.push('<div class="badge food"><b>Ne Yenir?</b>'+esc(s.food)+'</div>');
+  return '<article class="stop'+(done[id]?' is-done':'')+'" data-id="'+id+'">'+
+    '<div class="board"><span class="t">'+s.t1+'</span><span class="t2">– '+s.t2+'</span><span class="dur">SÜRE<b>'+esc(s.dur)+'</b></span></div>'+
+    '<div class="sbody"><div><h4>'+esc(s.title)+'</h4><p class="place">'+esc(s.place)+'</p></div>'+
+    '<p class="desc">'+esc(s.desc)+'</p>'+tr+
+    (b.length?'<div class="badges'+(b.length===1?' one':'')+'">'+b.join('')+'</div>':'')+
+    '<div class="foot-row"><label class="done"><input type="checkbox" id="cb-'+id+'" '+(done[id]?'checked':'')+'> Gezdik</label></div>'+
+    '</div></article>';
+}
+function dayHTML(d){
+  return '<section class="day" id="sec-'+d.n+'" data-day="'+d.n+'" aria-labelledby="h-'+d.n+'">'+
+    '<div class="day-head"><div class="art">'+ART[d.art]('d'+d.n)+'</div><div class="info">'+
+    '<span class="day-no">'+d.n+'. Gün · '+d.wd+'</span><h3 id="h-'+d.n+'">'+esc(d.title)+'</h3><p>'+esc(d.sum)+'</p>'+
+    '<div class="progress"><div class="bar"><i id="bar-'+d.n+'"></i></div><span id="prog-'+d.n+'"></span></div>'+
+    '</div></div><div class="timeline">'+d.stops.map(function(s,i){return stopHTML(d,s,i);}).join('')+'</div></section>';
+}
+var daysEl=document.getElementById('days');
+daysEl.innerHTML=DAYS.map(dayHTML).join('');
+
+function updateProgress(){
+  DAYS.forEach(function(d){
+    var c=0; d.stops.forEach(function(s,i){ if(done['d'+d.n+'s'+i]) c++; });
+    document.getElementById('bar-'+d.n).style.width=(c/d.stops.length*100)+'%';
+    document.getElementById('prog-'+d.n).textContent=c+' / '+d.stops.length+' durak gezildi';
+  });
+}
+updateProgress();
+daysEl.addEventListener('change',function(e){
+  var art=e.target.closest('.stop'); if(!art) return;
+  var id=art.getAttribute('data-id');
+  if(e.target.checked) done[id]=1; else delete done[id];
+  art.classList.toggle('is-done',e.target.checked); save(); updateProgress();
+});
+
+/* ---------- Tabs + hash routing ---------- */
+var TABS=[{h:'tum-plan',label:'Tüm Plan',sub:'4 gün',day:0}].concat(DAYS.map(function(d){return {h:'gun-'+d.n,label:d.n+'. Gün',sub:d.wd,day:d.n};}));
+var tabsEl=document.getElementById('tabs');
+tabsEl.innerHTML=TABS.map(function(t){return '<button class="tab" role="tab" id="tab-'+t.h+'" data-h="'+t.h+'" aria-selected="false">'+t.label+' <small>'+t.sub+'</small></button>';}).join('');
+function show(h, scroll){
+  var t=TABS.filter(function(x){return x.h===h;})[0]||TABS[0];
+  tabsEl.querySelectorAll('.tab').forEach(function(b){ b.setAttribute('aria-selected', b.getAttribute('data-h')===t.h?'true':'false'); });
+  daysEl.querySelectorAll('.day').forEach(function(s){ s.hidden = t.day!==0 && +s.getAttribute('data-day')!==t.day; });
+  /* map highlight */
+  document.querySelectorAll('#map .route').forEach(function(r){
+    var dd=+r.getAttribute('data-day'), on = t.day===0 || dd===t.day || (t.day===4 && dd===1);
+    r.style.opacity = on?1:.18;
+  });
+  document.querySelectorAll('#map .city-dot').forEach(function(g){
+    var ds=g.getAttribute('data-day').split(' ').map(Number);
+    g.style.opacity = (t.day===0 || ds.indexOf(t.day)>-1)?1:.4;
+  });
+  if(scroll){ var bar=document.querySelector('.tabbar'); var y=daysEl.getBoundingClientRect().top+window.scrollY-bar.offsetHeight-8; if(window.scrollY>y||scroll==='force') window.scrollTo({top:y,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}); }
+}
+tabsEl.addEventListener('click',function(e){
+  var b=e.target.closest('.tab'); if(!b) return;
+  var h=b.getAttribute('data-h');
+  if(location.hash==='#'+h) show(h,'force'); else location.hash=h;
+});
+window.addEventListener('hashchange',function(){ show(location.hash.slice(1),'force'); });
+show(location.hash.slice(1), false);
+
+/* ---------- Snow ---------- */
+var cv=document.getElementById('snow'), ctx=cv.getContext('2d'), flakes=[], W=0, H=0;
+var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function size(){ var r=cv.getBoundingClientRect(), dpr=Math.min(window.devicePixelRatio||1,2); W=r.width; H=r.height; cv.width=W*dpr; cv.height=H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); }
+function seed(){ flakes=[]; var n=Math.round(W*H/9000); for(var i=0;i<n;i++) flakes.push({x:Math.random()*W,y:Math.random()*H,r:.6+Math.random()*2.2,v:.25+Math.random()*.7,p:Math.random()*6.28}); }
+function draw(){ ctx.clearRect(0,0,W,H); ctx.fillStyle='rgba(255,255,255,.75)'; flakes.forEach(function(f){ ctx.globalAlpha=.35+f.r/4; ctx.beginPath(); ctx.arc(f.x,f.y,f.r,0,6.283); ctx.fill(); }); ctx.globalAlpha=1; }
+function tick(){ flakes.forEach(function(f){ f.y+=f.v; f.p+=.012; f.x+=Math.sin(f.p)*.35; if(f.y>H+4){f.y=-4;f.x=Math.random()*W;} }); draw(); if(!document.hidden) requestAnimationFrame(tick); }
+size(); seed(); draw();
+if(!reduce){ requestAnimationFrame(tick); document.addEventListener('visibilitychange',function(){ if(!document.hidden) requestAnimationFrame(tick); }); }
+window.addEventListener('resize',function(){ size(); seed(); draw(); });
+})();
+</script>
+</body>
+</html>
